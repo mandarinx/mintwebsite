@@ -10,6 +10,7 @@ nodemon({
     ext: 'js json',
     watch: [
         'app/**/*.*',
+        'lib/**/*.*',
         'config.js',
         'config.json',
         'main.js',

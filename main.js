@@ -1,34 +1,12 @@
-var logger    = require('logfmt');
-var http      = require('http');
+var routehandlers   = require('./app/routehandlers');
+var config          = require('./config.json');
+// TODO: replace with require('prismic-website') after submitting to npm
+var website         = require('./lib/index');
 
-var config    = require('./config');
-var web       = require('./app/web');
-
-process.on('SIGTERM', onShutdown);
-
-logger.log({
-    type: 'info',
-    msg:  'starting server'
+website.on('ready', function(webserver) {
+    routehandlers.init(webserver);
 });
 
-var server = http.createServer(web());
-server.listen(config.port, onListen);
-
-function onListen() {
-    logger.log({
-        type: 'info',
-        msg: 'listening',
-        port: server.address().port
-    });
-}
-
-function onShutdown() {
-    logger.log({
-        type: 'info',
-        msg: 'shutting down'
-    });
-    server.close(function() {
-        logger.log({ type: 'info', msg: 'exiting' });
-        process.exit();
-    });
-}
+website.init(config, {
+    base: __dirname
+});

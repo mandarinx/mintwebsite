@@ -1,12 +1,14 @@
 var Promise         = require('promise');
-var Prismic         = require('prismic.io').Prismic;
-var utils           = require('./utils');
-var query           = require('./query');
-var linkResolver    = require('./linkresolver');
 
-module.exports.get = function(ctx, options, content) {
-    content = content || {};
-    content.projects = [];
+var web;
+
+module.exports.init = function(webserver) {
+    web = webserver;
+}
+
+module.exports.get = function(res, options) {
+    res.content = res.content || {};
+    res.content.projects = [];
 
     options = options || {};
     if (!options.id) {
@@ -19,11 +21,11 @@ module.exports.get = function(ctx, options, content) {
 
     return new Promise(function (resolve, reject) {
 
-        query(ctx, options)
+        web.query(res.locals.ctx, options)
         .then(function(project_list) {
 
-            getProjects(project_list.results, content.projects);
-            resolve(content.projects);
+            getProjects(project_list.results, res.content.projects);
+            resolve(res.content.projects);
 
         }, function(reason) {
             reject(reason);
@@ -38,8 +40,8 @@ function getProjects(project_list, content) {
         content.push({
             i:              i,
             id:             project.id,
-            link:           linkResolver.document('work', project),
-            image:          utils.getImage(project.get('project.image')),
+            link:           web.linkresolver.document('work', project),
+            image:          web.utils.getImage(project.get('project.image')),
             name:           project.getText('project.name'),
             description:    project.getText('project.description'),
             og_description: project.getStructuredText('project.body').getFirstParagraph().text,
@@ -47,11 +49,11 @@ function getProjects(project_list, content) {
             slug:           project.slug,
             slugs:          project.slugs,
 
-            gallery:        utils.iterateGroup({
+            gallery:        web.utils.iterateGroup({
                 document:   project,
                 path:       'project.gallery'
             }, function(doc, i) {
-                return utils.getImage(doc.getImage('image'));
+                return web.utils.getImage(doc.getImage('image'));
             })
         });
     });

@@ -1,5 +1,8 @@
 {
     "construction":     false,
+    "cache": {
+        "static_files": 7776000
+    },
     "url": {
         "base":         "http://www.mintdesign.no"
     },
