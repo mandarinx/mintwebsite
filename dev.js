@@ -2,11 +2,6 @@ var nodemon = require('nodemon');
 
 nodemon({
     script: 'main.js',
-    // env: {
-    //     'MONGOLAB_URI': 'mongodb://mimura:finance@localhost:27017/mimura',
-    //     'PORT':         3000,
-    //     'NODE_ENV':     'development'
-    // },
     ext: 'js json',
     watch: [
         'app/**/*.*',
