@@ -1,7 +1,7 @@
 var routehandlers   = require('./app/routehandlers');
 var config          = require('./config.json');
-// TODO: replace with require('prismic-website') after submitting to npm
-var website         = require('./lib/index');
+// var website         = require('./lib/index');
+var website         = require('prismic-website');
 
 website.on('ready', function(webserver) {
     routehandlers.init(webserver);
